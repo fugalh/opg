@@ -63,16 +63,10 @@ opg is written in Ruby. The generated parser is ANSI C using getopt_long().
 
 Details
 -------
-The input format is:
-
-    -s --long           bool   Help text to the end of the line
-    -p --foo=PARAM      int    Help text
-    -o --optional=PARAM float? Help text
-
-Fields are split by whitespace. Recognized types are bool, char*, int, float.
-Parameter names are included in help text. A question mark after the type
-indicates an optional argument. Any line not starting with a dash is copied to
-the help message verbatim.
+Input fields are split by whitespace. Recognized types are bool, char*, int,
+float.  Parameter names are included in help text. A question mark after the
+type indicates an optional argument. Any line not starting with a dash is
+copied to the help message verbatim.
 
 Here is a simple example main():
 
@@ -89,6 +83,9 @@ Here is a simple example main():
         /* argc has been decremented and argv rearranged.
            Do things with the rest of the arguments. */
     }
+
+Help (-h, --help) is automatic and reserved, but if you want it displayed in
+the help message you need to put it there yourself.
 
 Author
 ------
