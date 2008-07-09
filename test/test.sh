@@ -1,5 +1,4 @@
 #! /bin/sh -x
-make && {
 ./test
 ./test -h
 ./test -f | grep ^f
@@ -8,4 +7,3 @@ make && {
 ./test -z42 | grep ^z
 ./test --baz=42 | grep ^z
 ./test -q 3.14159265358979 | grep ^q
-}

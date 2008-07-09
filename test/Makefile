@@ -1,9 +1,13 @@
-all: opts.c test
+CFLAGS+=-ansi -pedantic
+all: clean opts test
+	./test.sh
 
-test: test.c
+test: opts.c test.c opts.h
 
-opts.c: opts.txt ../opg
-	ruby ../opg $< > $@
-	-rm test
+opts: opts.txt ../opg
+	../opg $<
 
-.PHONY: all
+clean:
+	rm -f test *.o opts.[hc]
+
+.PHONY: all clean
