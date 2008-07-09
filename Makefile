@@ -11,4 +11,7 @@ install:
 uninstall:
 	rm -f $(PREFIX)/opg
 
+clean:
+	make -C test clean
+
 .PHONY: test
