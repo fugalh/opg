@@ -19,14 +19,16 @@ header = path + "#{input.basename(ext)}.h"
 source = path + "#{input.basename(ext)}.c"
 
 opts = []
+input = input.read
 input.each_line do |line|
-  line.strip!
+  line.chomp!
+  next unless line =~ /^-/
   short, long, type, help = line.split($;, 4)
-  raise "Bad short name '#{short}'" unless short =~ /^-?(\w)$/
+  raise "Bad short name '#{short}'" unless short =~ /^-(\w)$/
   short = $1
-  raise "Bad long name '#{long}'" unless long =~ /^(--)?(\w+)(=(\w+))?$/
-  long = $2
-  param = $4
+  raise "Bad long name '#{long}'" unless long =~ /^--(\w+)(=(\w+))?$/
+  long = $1
+  param = $3
   raise "Bad type '#{type}'" unless type =~ /^(char\*|int|float|bool)(\?)?$/
   required = $2.nil?
   type = type[0..-2] unless required
@@ -67,20 +69,20 @@ source_template = <<-EOF
 
 void usage(void)
 {
-    puts("Options:");
 <% 
-longs = opts.map {|o| 
-  "--" + o.long + (o.tipe == 'bool' ? '' : 
-                     (o.required ? "=" + o.param : "[=" + o.param + "]"))
-}
-longest = longs.map{|l| l.size}.max 
-shorts = opts.map{|o| "-" + o.short}
-helps = opts.map{|o| o.help}
-shorts.zip(longs, helps).each do |s,l,h|
-  msg = sprintf("  %s  %-" + longest.to_s + "s  %s", s, l, h) %>
+longest = opts.map{|o| o.long.size + (o.param ? o.param.size : 0)}.max + 5
+input.each_line do |line|
+  if line =~ /^-(.)/ and (o = opts.find {|o| o.short == $1})
+    short = "-\#{o.short}"
+    long = "--\#{o.long}"
+    long += (o.required ? "=\#{o.param}" : "[=\#{o.param}]") if o.tipe != 'bool'
+    help = o.help
+    msg = sprintf("  %s  %-\#{longest}s  %s", short, long, help) %>
     puts("<%= msg %>");
-<% end %>
-    puts("  -h  --help");
+<% else %>
+    puts("<%= line.chomp %>");
+<% end; end %>
+
     exit(1);
 }
 

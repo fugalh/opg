@@ -1,4 +1,7 @@
+usage: foo [options] other stuff
 -f --foo          bool     Short name, long name, type, help text.
- b   bar=name     char*    This has a required string argument.
+-b --bar=name     char*    This has a required string argument.
 -z --baz=decibels int?     Optional integer argument
 -q --quux=MACH    float    char*, int, and float are the recognized types
+
+Any line not starting with a dash is copied to the help message verbatim.

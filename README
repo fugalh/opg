@@ -4,10 +4,13 @@ Synopsis
 --------
 Input looks like this:
 
+   usage: foo [options] other stuff 
     -f --foo          bool     Short name, long name, type, help text.
-     b   bar=name     char*    This has a required string argument.
+    -b --bar=name     char*    This has a required string argument.
     -z --baz=decibels int?     Optional integer argument
     -q --quux=MACH    float    char*, int, and float are the recognized types
+
+   Any line not starting with a dash is copied into the help message verbatim.
 
 Output is a C header and source file:
 
@@ -38,12 +41,14 @@ Output is a C header and source file:
 
     void usage(void)
     {
-        puts("Options:");
+        puts("usage: foo [options] other stuff");
         puts("  -f  --foo             Short name, long name, type, help text.");
         puts("  -b  --bar=name        This has a required string argument.");
         puts("  -z  --baz[=decibels]  Optional integer argument");
         puts("  -q  --quux=MACH       char*, int, and float are the recognized types");
-        puts("  -h  --help");
+        puts("");
+        puts("Any line not starting with a dash is copied to the help message verbatim.");
+
         exit(1);
     }
 
@@ -65,8 +70,9 @@ The input format is:
     -o --optional=PARAM float? Help text
 
 Fields are split by whitespace. Recognized types are bool, char*, int, float.
-Dashes are optional. Parameter names are included in help text. A question mark
-after the type indicates an optional argument.
+Parameter names are included in help text. A question mark after the type
+indicates an optional argument. Any line not starting with a dash is copied to
+the help message verbatim.
 
 Here is a simple example main():
 
