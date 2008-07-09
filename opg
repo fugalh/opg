@@ -5,17 +5,17 @@ require 'erb'
 opts = []
 ARGF.each_line do |line|
   line.strip!
-  short, long, help = line.split($;, 3)
-  raise "Bad short '#{short}'" unless short =~ /^-?(\w)$/
+  short, long, type, help = line.split($;, 4)
+  raise "Bad short name '#{short}'" unless short =~ /^-?(\w)$/
   short = $1
-  raise "Bad long '#{long}'" unless long =~ /^(--)?(\w+)(=([\w*]+(\?)?))?$/
+  raise "Bad long name '#{long}'" unless long =~ /^(--)?(\w+)(=(\w+))?$/
   long = $2
-  type = ($4 or 'bool')
-  required = $5.nil?
+  param = $4
+  raise "Bad type '#{type}'" unless type =~ /^(char\*|int|float|bool)(\?)?$/
+  required = $2.nil?
   type = type[0..-2] unless required
-  raise "Bad type '#{type}'" unless type =~ /^(char\*|int|float|bool)$/
-  opts.push OpenStruct.new(:short => short, :long => long, :help => help,
-                           :tipe => type, :required => required)
+  opts.push OpenStruct.new(:short => short, :long => long, :param => param,
+                           :tipe => type, :required => required, :help => help)
 end
 
 template = <<-EOF
@@ -39,7 +39,7 @@ void usage(void)
 <% 
 longs = opts.map {|o| 
   "--" + o.long + (o.tipe == 'bool' ? '' : 
-                     (o.required ? "=" + o.tipe : "[=" + o.tipe + "]"))
+                     (o.required ? "=" + o.param : "[=" + o.param + "]"))
 }
 longest = longs.map{|l| l.size}.max 
 shorts = opts.map{|o| "-" + o.short}

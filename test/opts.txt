@@ -1,4 +1,4 @@
--f --foo          Help text
- b   bar=char*   This has a required string argument.
--z --baz=int?     Optional integer argument
--q --quux=float   char*, int, and float are the recognized types
+-f --foo          bool     Short name, long name, type, help text.
+ b   bar=name     char*    This has a required string argument.
+-z --baz=decibels int?     Optional integer argument
+-q --quux=MACH    float    char*, int, and float are the recognized types
