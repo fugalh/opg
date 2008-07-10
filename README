@@ -29,7 +29,7 @@ Output is a C header and source file:
     void usage(void);
 
     /* Parse options, populate opts, adjust argc/argv */
-    void parse_options(int *argc, char * const *argv, struct options *opts);
+    void parse_options(int *argc, char *const **argv, struct options *opts);
 
     #endif
 
@@ -52,7 +52,7 @@ Output is a C header and source file:
         exit(1);
     }
 
-    void parse_options(int *argc, char * const *argv, struct options *opts)
+    void parse_options(int *argc, char *const **argv, struct options *opts)
     {
         ...
     }
@@ -73,10 +73,10 @@ Here is a simple example main():
     #include "opts.h"
     #include <stdio.h>
     
-    int main(int argc, char **argv)
+    int main(int argc, char *const *argv)
     {
         struct options opts = {};
-        parse_options(&argc, argv, &opts);
+        parse_options(&argc, &argv, &opts);
 
         printf("f %d\nb %s\nz %d\nq %f\n", opts.f, opts.b, opts.z, opts.q);
 
